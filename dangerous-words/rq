@@ -1,0 +1,49 @@
+#!/bin/tcsh
+# SPDX-Package: FAVD
+# SPDX-PackageHomePage: https://github.com/secureIT-project/FAVD
+# SPDX-License-Identifier: MIT
+# SPDX-FileCopyrightText: 2021-2022 David Binkley, Leon Moonen, Sibren Isaacman
+
+# rq (-m|-c plus minus) min_score benign vulnerable [tag]
+
+if ($#argv < 4) then
+  echo "usage: rq (-m|-c plus minus) min_score benign vulnerable [tag]"
+  exit -1
+endif
+
+set dir = "data"
+if ( ! -e $dir ) mkdir $dir
+
+set mode = $argv[1]
+
+if ("x$mode" == "x-c") then
+  if ($#argv < 6) then
+    echo "usage: rq (-m|-c plus minus) min_score benign vulnerable [tag]"
+    exit -1
+  endif
+  set plus = $argv[2]
+  set minus = $argv[3]
+  set min = $argv[4]
+  set f1 = $argv[5]
+  set f2 = $argv[6]
+  if ($#argv > 6) then
+    set outname = "$argv[7]"
+  else
+    set outname = "$f1.$f2"
+  endif
+  set out = "$outname.$mode.$min,$plus,$minus.raw"
+  echo "output to $out"
+  time python3 -W ignore CrossValidation.py $mode $argv[2] $argv[3] $argv[4] $argv[5] $argv[6]  > $dir/$out
+else
+  set out = "$argv[3].$argv[4].$mode.$argv[2],x,x.raw"
+  if ($#argv > 4) then
+    set out = "$argv[5].$mode.$argv[2],x,x.raw"
+  endif
+  echo "output to $out"
+  time python3 -W ignore CrossValidation.py $mode $argv[2] $argv[3] $argv[4] > $dir/$out
+endif
+
+echo " "
+
+exit 0
+

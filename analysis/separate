@@ -1,0 +1,15 @@
+#!/bin/tcsh
+# SPDX-Package: FAVD
+# SPDX-PackageHomePage: https://github.com/secureIT-project/FAVD
+# SPDX-License-Identifier: MIT
+# SPDX-FileCopyrightText: 2021-2022 David Binkley, Leon Moonen, Sibren Isaacman
+
+# run on .raw files output by CrossValidation.py and LeaveOneOut.py
+# resulting .csv files in the input for individual.R
+# resulting .stats file include the dregs :)
+
+foreach x ($argv)
+  grep graph $x | sed -e 's/graph//' -e 's/##//' -e 's/ //g' > ! $x:t:r.csv
+  grep -v graph $x > !  $x:t:r.stats
+end
+

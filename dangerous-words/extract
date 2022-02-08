@@ -1,0 +1,23 @@
+#!/bin/tcsh
+# SPDX-Package: FAVD
+# SPDX-PackageHomePage: https://github.com/secureIT-project/FAVD
+# SPDX-License-Identifier: MIT
+# SPDX-FileCopyrightText: 2021-2022 David Binkley, Leon Moonen, Sibren Isaacman
+
+# run with "extract data/*"
+
+# june 23 hack to force all lines to have the same length lest R start merging lines ....
+# for older data echo plus and minus at end
+
+echo "program,model,filter,plus,minus,AD,AD train,AD test,best train,predicted,best test,fold,dwc,plus,minus" > ! .foo.csv
+
+grep -H "###  " $argv | sed -e 's/^[^\/]*\///' -e 's/\.[^.]*:###/,/' -e 's/\.-\(.\)./,\1,/' -e 's/ //g'  |\
+   awk -F, '{if (NF == 13) {printf("%s,%s,%s\n", $0,$4,$5)} else {print $0}}' \
+   >> .foo.csv
+
+csvcut -C4,5 -c 1,2,3,14,15,6,7,8,9,10,11,12,13 .foo.csv > ! .data.csv
+/bin/rm .foo.csv
+
+exit 0
+
+

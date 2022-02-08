@@ -1,0 +1,127 @@
+#!/bin/tcsh
+# SPDX-Package: FAVD
+# SPDX-PackageHomePage: https://github.com/secureIT-project/FAVD
+# SPDX-License-Identifier: MIT
+# SPDX-FileCopyrightText: 2021-2022 David Binkley, Leon Moonen, Sibren Isaacman
+
+# this "script" runs the 'doc' and 'dom' to generate the -c and -m data.
+# this file includes lots of configurations that did not make the final paper,
+# but were part of the adventure.
+
+# generate ./data-c
+
+doc 0.00 0 0
+doc -999 0 0
+
+
+exit 0
+
+
+# for m study in ./data-m 
+foreach x (0.00 0.05 0.10 0.15 0.20 0.25 0.30 0.35 0.40 0.45 0.50 0.55 0.60 0.65 0.70 0.75 0.80 0.85 0.90 0.95 1.00)
+  dom $x
+end
+
+# to regenerate "best" values (see paper) only
+foreach x (0.00 0.05 0.90 0.99 )
+  dom $x
+end
+
+# some experimental zooming in on specific ranges
+foreach x (0.92 0.94 0.96 0.98)
+  dom $x
+end
+
+foreach x (0.985 0.99 0.999 0.9995) 
+  dom $x
+end
+
+
+
+## ./data-weights -- generate data using fixed weight  (plus-minus value)
+## doc 0.00 1 1000;  doc -999 1 1000 
+## doc 0.00 1 100;  doc -999 1 100
+## doc 0.00 1 10;  doc -999 1 10
+## doc 0.00 1 3;  doc -999 1 3
+## doc 0.00 1 2;  doc -999 1 2
+## doc 0.00 3 4;  doc -999 3 4
+## doc 0.00 1 1;  doc -999 1 1
+## doc 0.00 3 2;  doc -999 3 2
+## doc 0.00 2 1;  doc -999 2 1
+## doc 0.00 3 1;  doc -999 3 1
+## doc 0.00 4 1;  doc -999 4 1
+## doc 0.00 5 1;  doc -999 5 1
+## doc 0.00 10 1;  doc -999 10 1
+## doc 0.00 1000 1;  doc -999 1000 1
+## doc 0.00 100 1;  doc -999 100 1
+## 
+## doc 0.00 7 4;  doc -999 7 4
+## doc 0.00 9 4;  doc -999 9 4
+## doc 0.00 5 2;  doc -999 5 2
+##  
+## doc 0.00 7 2;  doc -999 7 2
+## doc 0.00 11 4;  doc -999 11 4
+
+
+
+exit 0
+
+# generate the RQ1 data
+
+python3 AllDangerous.py ../names/processed/Asterisk_benign.txt ../names/processed/Asterisk_vulnerable.txt
+python3 AllDangerous.py ../names/processed/FFmpeg_benign.txt ../names/processed/FFmpeg_vulnerable.txt
+python3 AllDangerous.py ../names/processed/LibPNG_benign.txt ../names/processed/LibPNG_vulnerable.txt
+python3 AllDangerous.py ../names/processed/LibTIFF_benign.txt ../names/processed/LibTIFF_vulnerable.txt
+python3 AllDangerous.py ../names/processed/Pidgin_benign.txt ../names/processed/Pidgin_vulnerable.txt
+python3 AllDangerous.py ../names/processed/VDISC_benign.txt ../names/processed/VDISC_vulnerable.txt
+python3 AllDangerous.py ../names/processed/VLC_benign.txt ../names/processed/VLC_vulnerable.txt
+
+
+exit 0
+
+
+# symmetry demands the following :) ... Q: any surprises? ... A: no
+# doc 0.00 4 3 ; doc -999  4 3     
+# doc 0.00 3 4 ; doc -999  3 4
+# doc 0.00 2 3 ; doc -999  2 3 
+# doc 0.00 3 2 ; doc -999 3 2
+# doc 0.00 4 7 ; doc -999  4 7        
+# doc 0.00 7 4 ; doc -999 7 4
+# doc 0.00 4 9 ; doc -999  4 9 
+# doc 0.00 9 4 ; doc -999 9 4
+# doc 0.00 2 5 ; doc -999  2 5 
+# doc 0.00 5 2 ; doc -999 5 2
+# doc 0.00 4 11 ; doc -999  4 11     
+# doc 0.00 11 4 ; doc -999 11 4
+# doc 0.00 2 7 ; doc -999  2 7 
+# doc 0.00 7 2 ; doc -999 7 2
+# doc 0.00 1 4 ; doc -999  1 4 
+# doc 0.00 4 1 ; doc -999 4 1
+# doc 0.00 1 5 ; doc -999  1 5
+# doc 0.00 5 1 ; doc -999 5 1
+# 
+# doc 0.00 1 2 ; doc -999  1 2
+# doc 0.00 2 1 ; doc -999 2 1
+# doc 0.00 1 3 ; doc -999  1 3
+# doc 0.00 3 1 ; doc -999 3 1
+# doc 0.00 1 10 ; doc -999  1 10
+# doc 0.00 10 1 ; doc -999 10 1
+# 
+# doc 0.00 1 1 ; doc -999  1 1
+
+# doc 0.00 1 1000 ; doc -999 1 1000 
+# doc 0.00 1000 1 ; doc -999 1000 1
+# doc 0.00 1 100 ; doc -999 1 100
+# doc 0.00 100 ;1  doc -999 100 1
+# doc 0.00 1 10 ; doc -999 1 10
+# doc 0.00 10 1 ; doc -999 1 10
+
+
+
+
+# detailed data used in paper
+ FFmpeg.-c.-999,0,0.csv
+ LibPNG.-c.-999,0,0.csv
+ LibPNG.-c.0.00,0,0.csv
+ loo.-c.-999,0,0.csv
+ VDISC.-c.-999,10,1.csv

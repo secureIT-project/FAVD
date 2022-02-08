@@ -1,0 +1,75 @@
+#!/bin/tcsh
+# SPDX-Package: FAVD
+# SPDX-PackageHomePage: https://github.com/secureIT-project/FAVD
+# SPDX-License-Identifier: MIT
+# SPDX-FileCopyrightText: 2021-2022 David Binkley, Leon Moonen, Sibren Isaacman
+
+# run for min 0 and -999   (-999 include all words)
+
+if ($#argv < 3) then
+  echo "usage: doc min_score plus minus"
+  exit -1
+endif
+
+
+set out = "data"
+if ( ! -e $out ) mkdir $out
+
+set min = $argv[1]
+set plus = $argv[2]
+set minus = $argv[3]
+
+set data = "../names/processed"
+
+set all = "$data/Asterisk_benign.txt $data/Asterisk_vulnerable.txt $data/FFmpeg_benign.txt $data/FFmpeg_vulnerable.txt $data/LibPNG_benign.txt $data/LibPNG_vulnerable.txt $data/LibTIFF_benign.txt $data/LibTIFF_vulnerable.txt $data/Pidgin_benign.txt $data/Pidgin_vulnerable.txt $data/VLC_benign.txt $data/VLC_vulnerable.txt"
+
+
+rq -c $plus $minus $min $data/LibPNG_benign.txt $data/LibPNG_vulnerable.txt LibPNG
+rq -c $plus $minus $min $data/FFmpeg_benign.txt $data/FFmpeg_vulnerable.txt FFmpeg
+rq -c $plus $minus $min $data/Pidgin_benign.txt $data/Pidgin_vulnerable.txt Pidgin
+rq -c $plus $minus $min $data/VLC_benign.txt $data/VLC_vulnerable.txt VLC
+rq -c $plus $minus $min $data/LibTIFF_benign.txt $data/LibTIFF_vulnerable.txt LibTIFF
+rq -c $plus $minus $min $data/Asterisk_benign.txt $data/Asterisk_vulnerable.txt Asterisk
+
+rq -c $plus $minus $min $data/VDISC_benign.txt $data/VDISC_vulnerable.txt VDISC
+
+python3 -W ignore LeaveOneOut.py -c $plus $minus $min $all > $out/loo.-c.$min,$plus,$minus.raw
+
+
+
+exit 0
+
+# while 10,1 wins 20,1 is way worse
+# rq -c 20 1 -999 $data/LibPNG_benign.txt $data/LibPNG_vulnerable.txt LibPNG
+# rq -c 20 1 0.00 $data/LibPNG_benign.txt $data/LibPNG_vulnerable.txt LibPNG
+# rq -c 20 1 0.00 $data/Pidgin_benign.txt $data/Pidgin_vulnerable.txt Pidgin
+
+
+# loo study
+
+set id4 = "$data/FFmpeg_benign.txt $data/FFmpeg_vulnerable.txt $data/LibPNG_benign.txt $data/LibPNG_vulnerable.txt $data/LibTIFF_benign.txt $data/LibTIFF_vulnerable.txt $data/VLC_benign.txt $data/VLC_vulnerable.txt"
+
+set id = "$data/FFmpeg_benign.txt $data/FFmpeg_vulnerable.txt $data/LibPNG_benign.txt $data/LibPNG_vulnerable.txt $data/LibTIFF_benign.txt $data/LibTIFF_vulnerable.txt"
+
+set xd = "$data/Asterisk_benign.txt $data/Asterisk_vulnerable.txt $data/Pidgin_benign.txt $data/Pidgin_vulnerable.txt $data/VLC_benign.txt $data/VLC_vulnerable.txt"
+
+set f2346 = "$data/FFmpeg_benign.txt $data/FFmpeg_vulnerable.txt $data/LibPNG_benign.txt $data/LibPNG_vulnerable.txt $data/LibTIFF_benign.txt $data/LibTIFF_vulnerable.txt $data/VLC_benign.txt $data/VLC_vulnerable.txt"
+
+set f234 = "$data/FFmpeg_benign.txt $data/FFmpeg_vulnerable.txt $data/LibPNG_benign.txt $data/LibPNG_vulnerable.txt $data/LibTIFF_benign.txt $data/LibTIFF_vulnerable.txt"
+
+# for percent overlap testing
+set f23 = "$data/FFmpeg_benign.txt $data/FFmpeg_vulnerable.txt $data/LibPNG_benign.txt $data/LibPNG_vulnerable.txt"
+
+set f26 = "$data/FFmpeg_benign.txt $data/FFmpeg_vulnerable.txt $data/VLC_benign.txt $data/VLC_vulnerable.txt"
+
+set f34 = "$data/LibPNG_benign.txt $data/LibPNG_vulnerable.txt $data/LibTIFF_benign.txt $data/LibTIFF_vulnerable.txt"
+
+python3 -W ignore LeaveOneOut.py -c $plus $minus $min $xd > $out/loo-xd.-c.$min,$plus,$minus.raw
+python3 -W ignore LeaveOneOut.py -c $plus $minus $min $id4 > $out/loo-id4.-c.$min,$plus,$minus.raw
+python3 -W ignore LeaveOneOut.py -c $plus $minus $min $id > $out/loo-id.-c.$min,$plus,$minus.raw
+
+python3 -W ignore LeaveOneOut.py -c $plus $minus $min $f2346 > $out/loo2346.-c.$min,$plus,$minus.raw
+python3 -W ignore LeaveOneOut.py -c $plus $minus $min $f234  > $out/loo234.-c.$min,$plus,$minus.raw
+python3 -W ignore LeaveOneOut.py -c $plus $minus $min $f26   > $out/loo26.-c.$min,$plus,$minus.raw
+python3 -W ignore LeaveOneOut.py -c $plus $minus $min $f34   > $out/loo34.-c.$min,$plus,$minus.raw
+

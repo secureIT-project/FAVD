@@ -1,0 +1,4 @@
+pandas==1.4
+h5py==3.6
+requests==2.25
+lizard==1.17

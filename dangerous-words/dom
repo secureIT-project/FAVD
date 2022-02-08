@@ -1,0 +1,60 @@
+#!/bin/tcsh
+# SPDX-Package: FAVD
+# SPDX-PackageHomePage: https://github.com/secureIT-project/FAVD
+# SPDX-License-Identifier: MIT
+# SPDX-FileCopyrightText: 2021-2022 David Binkley, Leon Moonen, Sibren Isaacman
+
+
+if ($#argv < 1) then
+  echo "usage: dom min_score "
+  exit -1
+endif
+
+
+set out = "data"
+if ( ! -e $out ) mkdir $out
+
+set min = $argv[1]
+
+set data = "../names/processed"
+
+set all = "$data/Asterisk_benign.txt $data/Asterisk_vulnerable.txt $data/FFmpeg_benign.txt $data/FFmpeg_vulnerable.txt $data/LibPNG_benign.txt $data/LibPNG_vulnerable.txt $data/LibTIFF_benign.txt $data/LibTIFF_vulnerable.txt $data/Pidgin_benign.txt $data/Pidgin_vulnerable.txt $data/VLC_benign.txt $data/VLC_vulnerable.txt"
+
+rq -m $min $data//FFmpeg_benign.txt $data//FFmpeg_vulnerable.txt FFmpeg
+rq -m $min $data//LibPNG_benign.txt $data//LibPNG_vulnerable.txt LibPNG
+rq -m $min $data//Pidgin_benign.txt $data//Pidgin_vulnerable.txt Pidgin
+rq -m $min $data//VLC_benign.txt $data//VLC_vulnerable.txt VLC
+rq -m $min $data//LibTIFF_benign.txt $data//LibTIFF_vulnerable.txt LibTIFF
+rq -m $min $data/VDISC_benign.txt $data/VDISC_vulnerable.txt VDISC
+
+python3 -W ignore LeaveOneOut.py -m $min $all > data/loo.-m.$min,x,x.raw
+
+
+exit 0
+
+
+# loo study 
+
+set f2346 = "$data/FFmpeg_benign.txt $data/FFmpeg_vulnerable.txt $data/LibPNG_benign.txt $data/LibPNG_vulnerable.txt $data/LibTIFF_benign.txt $data/LibTIFF_vulnerable.txt $data/VLC_benign.txt $data/VLC_vulnerable.txt"
+
+set f234 = "$data/FFmpeg_benign.txt $data/FFmpeg_vulnerable.txt $data/LibPNG_benign.txt $data/LibPNG_vulnerable.txt $data/LibTIFF_benign.txt $data/LibTIFF_vulnerable.txt"
+
+set f26 = "$data/FFmpeg_benign.txt $data/FFmpeg_vulnerable.txt $data/VLC_benign.txt $data/VLC_vulnerable.txt"
+
+set f34 = "$data/LibPNG_benign.txt $data/LibPNG_vulnerable.txt $data/LibTIFF_benign.txt $data/LibTIFF_vulnerable.txt"
+
+
+set id4 = "$data/FFmpeg_benign.txt $data/FFmpeg_vulnerable.txt $data/LibPNG_benign.txt $data/LibPNG_vulnerable.txt $data/LibTIFF_benign.txt $data/LibTIFF_vulnerable.txt $data/VLC_benign.txt $data/VLC_vulnerable.txt"
+
+set id = "$data/FFmpeg_benign.txt $data/FFmpeg_vulnerable.txt $data/LibPNG_benign.txt $data/LibPNG_vulnerable.txt $data/LibTIFF_benign.txt $data/LibTIFF_vulnerable.txt"
+
+set xd = "$data/Asterisk_benign.txt $data/Asterisk_vulnerable.txt $data/Pidgin_benign.txt $data/Pidgin_vulnerable.txt $data/VLC_benign.txt $data/VLC_vulnerable.txt"
+
+python3 -W ignore LeaveOneOut.py -m  $min $id4 > $out/loo-id4.-m.$min,x,x.raw
+python3 -W ignore LeaveOneOut.py -m  $min $id > $out/loo-id.-m.$min,x,x.raw
+python3 -W ignore LeaveOneOut.py -m  $min $xd > $out/loo-xd.-m.$min,x,x.raw
+
+python3 -W ignore LeaveOneOut.py -m  $min $f2346 > $out/loo2346.-m.$min,x,x.raw
+python3 -W ignore LeaveOneOut.py -m  $min $f234  > $out/loo234.-m.$min,x,x.raw
+python3 -W ignore LeaveOneOut.py -m  $min $f26   > $out/loo26.-m.$min,x,x.raw
+python3 -W ignore LeaveOneOut.py -m  $min $f34   > $out/loo34.-m.$min,x,x.raw
