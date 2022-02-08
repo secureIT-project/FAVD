@@ -1,5 +1,6 @@
 [![source under MIT license](https://img.shields.io/badge/source%20license-MIT-green)](LICENSE)
 [![data under CC BY 4.0 license](https://img.shields.io/badge/data%20license-CC%20BY%204.0-green)](https://creativecommons.org/licenses/by/4.0/)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5957264.svg)](https://doi.org/10.5281/zenodo.5957264)
 
 # FAVD: Featherweight Assisted Vulnerability Discovery
 
@@ -45,7 +46,7 @@ Finally, for the analysis in step 3, the following R libraries are needed:
 * agricolae, ggplot2, reshape2, xtable
 
 
-## Citation and Zenodo links
+## Citation
 
 If you build on this data or code, please cite this work by referring to the paper: 
 
